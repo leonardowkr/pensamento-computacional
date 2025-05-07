@@ -1,18 +1,75 @@
+import time 
 class ContaBancaria: 
+    '''
+        Classe que implementa méotodos para manipular uma conta bancaria,add()
+        Atributo: titular (str), saldo(float), limite(float), e históricos (lista de dicionários)
+
+        OBS: Operações no histórico: 0 - sacar, 1 - depositar, 2 - transferir
+    '''
+    
+
     def __init__(self, titular, saldo, limite, historico):
+        '''
+            Construtor da classe ContaBancaria
+        '''
         self.titular = titular
         self.saldo = saldo
         self.limite = limite
         self.historico = historico
     
     def depositar(self, valor):
+        '''
+            Método que realiza o depósito na conta bancaria.
+            Entrada: valor (float)
+            Return: True, se a operação foi realizada com sucesso. False, se a operação não foi realizada
+
+        '''     
+        if valor > 0:
+            self.valor = valor
+            self.historico.append({"operacao": 1,
+                                   "remetente": self.titular,
+                                   "destinatario": None,
+                                   "valor": valor,
+                                   "saldo": self.saldo,
+                                   "data e tempo": time.time()})
+
+            return True
+        else:
+            print(f"O valor {valor} é inválido")  
+            return False
+         
+        self.saldo += valor
+        self.historico += f"Depósito de {valor}\n"
+    def sacar(self, valor):
+        if valor <= self.saldo:
             self.saldo += valor
-            self.historico += f"Depósito de {valor}\n"
-    def sacar():
-        None
-    def transferir():
-        None
-    def exibir_historico(historico):
-        print(historico)
+            self.historico.append({"operacao": 0,
+                                   "remetente": self.titular,
+                                   "destinatario": None,
+                                   "valor": valor,
+                                   "saldo": self.saldo,
+                                   "data e tempo": time.time()})
+            print("Saque realizado!")
+            return True
+        else: 
+            a = input(f"Deseja utilizar o limite? (R${self.limite}) [s para sim]")
+            if a == 's':
+                if(self.saldo + self.limite) >= valor:
+                    self.saldo -= valor
+                    print("Saque realizado!")
+                    return True
+    def transferir(self, destinatario, valor):
+        
+        self.historico.append({"operacao": 2,
+                                   "remetente": self.titular,
+                                   "destinatario": destinatario,
+                                   "valor": valor,
+                                   "saldo": self.saldo,
+                                   "data e tempo": time.localtime()})
+        
+    def exibir_historico(self, historico):
+        dt = time.localtime()
+        for transacao in self.historico:        
+            print(f"\nOp: {transacao["operacao"]}, Remetente: {transacao["remetente"]}, Destinatário {transacao["destinatario"]}, Saldo: {transacao["saldo"]}, Data e Tempo {dt.tm_year}/{dt.tm_mon}/{dt.tm_mday} {dt.tm_hour}:{dt.tm_min}:{dt.tm_sec}")
     def exibir_saldo(): 
         None
