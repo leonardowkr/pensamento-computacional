@@ -17,18 +17,21 @@ class ContaBancaria:
         self.limite = limite
         self.historico = historico
     
-    def depositar(self, valor):
+    def depositar(self, valor, remetente=None):
         '''
             Método que realiza o depósito na conta bancaria.
             Entrada: valor (float)
             Return: True, se a operação foi realizada com sucesso. False, se a operação não foi realizada
 
         '''     
+        op = 1
+        if remetente != None:
+            op = 2
         if valor > 0:
             self.valor = valor
             self.historico.append({"operacao": 1,
-                                   "remetente": self.titular,
-                                   "destinatario": None,
+                                   "remetente": remetente,
+                                   "destinatario": self.titular,
                                    "valor": valor,
                                    "saldo": self.saldo,
                                    "data e tempo": time.time()})
@@ -37,15 +40,16 @@ class ContaBancaria:
         else:
             print(f"O valor {valor} é inválido")  
             return False
-         
-        self.saldo += valor
-        self.historico += f"Depósito de {valor}\n"
-    def sacar(self, valor):
+
+    def sacar(self, valor, destinatario = None):
+        op = 0
+        if destinatario != None:
+            op = 2
         if valor <= self.saldo:
             self.saldo += valor
             self.historico.append({"operacao": 0,
                                    "remetente": self.titular,
-                                   "destinatario": None,
+                                   "destinatario": destinatario,
                                    "valor": valor,
                                    "saldo": self.saldo,
                                    "data e tempo": time.time()})
@@ -58,18 +62,23 @@ class ContaBancaria:
                     self.saldo -= valor
                     print("Saque realizado!")
                     return True
+                
     def transferir(self, destinatario, valor):
-        
+        self.sacar(valor, destinatario)
         self.historico.append({"operacao": 2,
                                    "remetente": self.titular,
                                    "destinatario": destinatario,
                                    "valor": valor,
                                    "saldo": self.saldo,
                                    "data e tempo": time.localtime()})
-        
-    def exibir_historico(self, historico):
+        destinatario.depositar(valor)
+        self.sacar(valor, destinatario.titular)
+
+    def exibir_historico(self):
         dt = time.localtime()
         for transacao in self.historico:        
             print(f"\nOp: {transacao["operacao"]}, Remetente: {transacao["remetente"]}, Destinatário {transacao["destinatario"]}, Saldo: {transacao["saldo"]}, Data e Tempo {dt.tm_year}/{dt.tm_mon}/{dt.tm_mday} {dt.tm_hour}:{dt.tm_min}:{dt.tm_sec}")
+
     def exibir_saldo(): 
         None
+    
