@@ -3,13 +3,13 @@ from models.ContaBancaria import ContaBancaria
 
 Banco = []
 while True:
-    op = input("Selecione a oção desejada: ")
+    op = input("Selecione a operação desejada: ")
     if op == '1':
-        titular = input("Insira o nome do titular")
+        titular = input("Insira o nome do titular: ")
         saldo = 0
         limite = 100
         Banco.append(ContaBancaria(titular, saldo, limite, []))
-        
+        print("Conta criada com sucesso.\n")
     if op == '2':
         titular = input("Insira o nome do titular que deseja consultar: ")
         for cliente in Banco:
@@ -21,8 +21,37 @@ while True:
         titular = input("Insira o nome do titular que deseja sacar: ")
         for cliente in Banco:
             if cliente.titular == titular:
-                valor = input("Insira o valor que deseja sacar")
+                valor = float(input("Insira o valor que deseja sacar"))
                 cliente.sacar(valor)
+            else: 
+                print('Cliente não encontrado')
+
+    if op == '4':
+        titular = input("Insira o nome do titular que deseja depositar: ")
+        for cliente in Banco:
+            if cliente.titular == titular:
+                valor = float(input("Insira o valor que deseja depositar"))
+                cliente.depositar(valor)
+                if(cliente.depositar(valor)):
+                    print('Depósito realizado com sucesso')
+                    
+
+
+    if op == '5':
+        titular = input("Insira o nome do titular que deseja transferir: ")
+        titular_saque = input("Insira o nome do titular da conta a transferir")
+        for cliente in Banco:
+            if cliente.titular == titular_saque:
+                valor = float(input("Insira o valor que deseja transferir"))
+                if(cliente.sacar(valor)):
+                    for cliente in Banco:
+                        if(cliente.titular == titular):
+                            if(cliente.depositar):
+                                print('Saque realizado com sucesso')
+                        else:
+                            print('Erro. [Depósito]')
+                else:
+                    print('Erro. [Saque]')
             else: 
                 print('Cliente não encontrado')
 """""
