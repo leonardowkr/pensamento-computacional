@@ -12,10 +12,10 @@ class ContaBancaria:
         '''
         Construtor da classe ContaBancária
         '''
-        self.titular = titular
-        self.saldo = saldo
-        self.limite = limite
-        self.historico = historico
+        self.__titular = titular
+        self.__saldo = saldo
+        self.__limite = limite
+        self.__historico = historico
         
     def depositar(self, valor, remetente = None):
         '''
@@ -28,12 +28,12 @@ class ContaBancaria:
         if remetente != None:
             op = 2
         if valor > 0:
-            self.saldo += valor
-            self.historico.append({"operacao": op,
+            self.__saldo += valor
+            self.__historico.append({"operacao": op,
                                    "remetente": remetente, 
-                                   "destinatario": self.titular,
+                                   "destinatario": self.__titular,
                                    "valor": valor,
-                                   "saldo": self.saldo,
+                                   "saldo": self.__saldo,
                                    "dataetempo": int(time.time())})
             return True
         else:
@@ -50,21 +50,21 @@ class ContaBancaria:
         # detecta se é uma transferência e muda a operacao para 2
         if destinatario != None:
             op = 2
-        if valor <= self.saldo:
-            self.saldo -= valor
-            self.historico.append({"operacao": op,
-                                   "remetente": self.titular, 
+        if valor <= self.__saldo:
+            self.__saldo -= valor
+            self.__historico.append({"operacao": op,
+                                   "remetente": self.__titular, 
                                    "destinatario": destinatario,
                                    "valor": valor,
-                                   "saldo": self.saldo,
+                                   "saldo": self.__saldo,
                                    "dataetempo": int(time.time())})
             print("Saque realizado!")
             return True
         else: # sem grana em conta
-            a = input(f"Deseja utilizar o Limite? (R${self.limite}) [s para sim]")
+            a = input(f"Deseja utilizar o Limite? (R${self.__limite}) [s para sim]")
             if a == 's':
-                if (self.saldo + self.limite) >= valor: 
-                    self.saldo -= valor
+                if (self.__saldo + self.__limite) >= valor: 
+                    self.__saldo -= valor
                     print("Saque realizado!")
                     return True
                 else:
@@ -83,14 +83,14 @@ class ContaBancaria:
         # se o saque ocorrer com sucesso
         if self.sacar(valor, destinatario.titular):
             # deposita na conta do destinatário
-            destinatario.depositar(valor, self.titular)
+            destinatario.depositar(valor, self.__titular)
         
         
         
     
     def exibirHistorico(self):
         print("Histórico de Transações:")
-        for transacao in self.historico:
+        for transacao in self.__historico:
             dt = time.localtime(transacao["dataetempo"])
             print("Op:", transacao["operacao"],
                   ". Remetente:",  transacao["remetente"], 
@@ -101,3 +101,6 @@ class ContaBancaria:
                   f"{dt.tm_hour}:{dt.tm_min}:{dt.tm_sec} {dt.tm_mday}/{dt.tm_mon}/{dt.tm_year}")
     
     # def exibirSaldo(self):
+
+    def getTitular(self):
+        return self.__titular

@@ -19,26 +19,25 @@ class ContaBancaria:
     
     def depositar(self, valor, remetente=None):
         '''
-            Método que realiza o depósito na conta bancaria.
-            Entrada: valor (float)
-            Return: True, se a operação foi realizada com sucesso. False, se a operação não foi realizada
-
-        '''     
+        Objetivo: Método que realiza do depósito na conta bancária.
+        Entradas: valor (float) e remetente (str).
+        Return: True, se a operação foi realizada com sucesso. False, se a operação não foi realizada.
+        '''
         op = 1
+        # detecta se é uma transferência
         if remetente != None:
             op = 2
         if valor > 0:
-            self.valor = valor
-            self.historico.append({"operacao": 1,
-                                   "remetente": remetente,
+            self.saldo += valor
+            self.historico.append({"operacao": op,
+                                   "remetente": remetente, 
                                    "destinatario": self.titular,
                                    "valor": valor,
                                    "saldo": self.saldo,
-                                   "data e tempo": time.time()})
-
+                                   "dataetempo": int(time.time())})
             return True
         else:
-            print(f"O valor {valor} é inválido")  
+            print(f" O valor {valor} é inválido!")
             return False
 
     def sacar(self, valor, destinatario = None):
@@ -53,7 +52,7 @@ class ContaBancaria:
                                    "valor": valor,
                                    "saldo": self.saldo,
                                    "data e tempo": time.time()})
-            print("Saque realizado!")
+            #print("Saque realizado!")
             return True
         else: 
             a = input(f"Deseja utilizar o limite? (R${self.limite}) [s para sim]")
