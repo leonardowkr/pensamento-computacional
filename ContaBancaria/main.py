@@ -3,7 +3,7 @@ from models.ContaBancaria import ContaBancaria
 
 Banco = []
 while True:
-    op = input(f'Selecione a operação desejada: \n[1] Criar conta \n[2] Consultar saldo \n[3] Sacar \n[4] Depositar \n[5]Transferir\n[0] Sair\n')
+    op = input(f'Selecione a operação desejada: \n[1] Criar conta \n[2] Consultar saldo \n[3] Sacar \n[4] Depositar \n[5] Transferir\n[6] Exibir histórico de transações\n[7] Excluir conta \n[0] Sair\n')
     if op == '1':
         titular = input("Insira o nome do titular: ")
         saldo = 0
@@ -16,6 +16,7 @@ while True:
         if not existe:
                 Banco.append(ContaBancaria(titular, saldo, limite, []))
                 print("Conta criada com sucesso.\n")
+
     if op == '2':
         titular = input("Insira o nome do titular que deseja consultar: ")
         encontrou = False
@@ -25,6 +26,7 @@ while True:
                 encontrou = True                
         if not encontrou:
             print('Cliente não encontrado')
+
     if op == '3':
         titular = input("Insira o nome do titular que deseja sacar: ")
         encontrou = False
@@ -73,23 +75,18 @@ while True:
         if not encontrou_entregador:
             print('Cliente não encontrado 2')
 
-"""""
-novo_cliente = input("\nDigite o nome do titular: ")
-novo_cliente = {"titular": titular, "saldo": 0, "limite": 200}
-Banco.append(titular)
-
-print(f"A conta de {Banco['titular']['titular']} foi criada")
-titular = input("Digite o titular da conta que deseja ver o saldo:")
-
-pedro = ContaBancaria("Pedro", 100, 50, [])
-guilherme = ContaBancaria("Guilherme", 1000, 500, [])
-guilherme.transferir(pedro, 500)
-guilherme.exibir_historico()
-
-
-for conta in Banco:
-    if conta.getTitular() == titular
-        print(conta)
-def __str__ (self):
-    return f"Titular: {self.__titular}, Saldo: {self.__titular}"
-"""
+    if op == '6':
+        titular = input('Insira o titular para exibir o histórico')
+        for cliente in Banco:
+            if(cliente.titular == titular):
+                cliente.exibir_historico()
+    if op == '7':
+        titular = input('Insira o titular que deseja excluir a conta')
+        for cliente in Banco:
+            if(cliente.titular == titular):
+                if titular.saldo < 0:
+                    while confirmacao != 'ok' and confirmacao != 'OK':
+                        confirmacao = input(f'É necessário realizar depósito de R$ {titular.saldo}[OK]')
+                if titular.saldo > 0:
+                    while confirmacao != 'ok' and confirmacao != 'OK':
+                        None

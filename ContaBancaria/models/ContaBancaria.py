@@ -75,8 +75,8 @@ class ContaBancaria:
 
     def exibir_historico(self):
         dt = time.localtime()
-        for transacao in self.historico:        
-            print(f"\nOp: {transacao["operacao"]}, Remetente: {transacao["remetente"]}, Destinatário {transacao["destinatario"]}, Saldo: {transacao["saldo"]}, Data e Tempo {dt.tm_year}/{dt.tm_mon}/{dt.tm_mday} {dt.tm_hour}:{dt.tm_min}:{dt.tm_sec}")
+        for transacao in self.historico:
+                print(f"\nOp: {transacao["operacao"]}, Remetente: {transacao["remetente"]}, Destinatário {transacao["destinatario"]}, Saldo: {transacao["saldo"]}, Data e Tempo {dt.tm_year}/{dt.tm_mon}/{dt.tm_mday} {dt.tm_hour}:{dt.tm_min}:{dt.tm_sec}")
 
     def exibir_saldo(): 
         None
