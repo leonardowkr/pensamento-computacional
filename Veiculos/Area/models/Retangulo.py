@@ -1,6 +1,11 @@
-class Trinagulo: 
-    def __init__(self, lado):
+class Retangulo: 
+    def __init__(self, lado: float):
         self.lado = lado
+        self.area = 0
 
     def calc_area(self):
-        area = (lado*lado)/2
+        self.area = (self.lado*self.lado)
+        
+    def __str__(self):
+        info = f"Area Retângulo {self.area}"
+        return info
