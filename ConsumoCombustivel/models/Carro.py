@@ -10,3 +10,8 @@ class Carro(Veiculos):
         consumo = distancia / self.eficienciaMedia
         self.consumo = consumo
         return consumo
+    
+    def __str__(self):
+        infos = super().__str__()
+        infos += f"Eficiência média: {self.eficienciaMedia} km/h"
+        return infos
