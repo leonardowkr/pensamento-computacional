@@ -25,3 +25,10 @@ class Veiculos:
     def getPlaca(self) -> str:
         """Retorna a placa do veiculo"""
         return self.__placa
+    
+    def setPlaca(self, placa) -> str:
+        if(placa[:3].isalpha() and placa[3:4].isnumeric() and placa[5:].isnumeric()):
+            self.__placa = placa
+            print(f'Placa arada para: {placa}')
+        else: 
+            print('Placa inválida')

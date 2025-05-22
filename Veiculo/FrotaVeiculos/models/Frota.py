@@ -13,4 +13,5 @@ class Frota():
         consumo_total = 0
         for veiculo in self.__frota:
             consumo_total += veiculo.calcular_consumo(distancia)
+        print(f'Consumo total da frota: {consumo_total}')
         return consumo_total

@@ -26,6 +26,13 @@ class Veiculos:
         """Retorna a placa do veiculo"""
         return self.__placa
     
+    def setPlaca(self, placa) -> str:
+        if(placa[:3].isalpha() and placa[3:4].isnumeric() and placa[5:].isnumeric()):
+            self.__placa = placa
+            print(f'Placa altearada para: {self.__placa}')
+        else: 
+            print('Placa inválida')
+            
     def setValorFipe(self, valor):
         """
             Método que altera o valor da Fipe do veículo
@@ -38,3 +45,11 @@ class Veiculos:
     
     def calcular_consumo():
         print("metodo somente disponível para subclasses")
+
+    def __eq__(self, placa_dois):
+        if(self.__placa == placa_dois.getPlaca()):
+            
+            return True
+        else: 
+           
+            return False
