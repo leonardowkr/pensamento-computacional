@@ -6,7 +6,17 @@ class ConversorMoeda(Produto):
         self.__EUR_BRL = 6.0
         self.__EUR_USD = 1.22
 
+    def confere_preco(self, produto: Produto):
+        try:
+            if isinstance (produto.getPreco(), (int, float)):
+                print('é um número')
+                if(produto.getPreco > 0):
+                    print('é um número diferente de zero')
+        except PrecoInvalidoError:
+            print("Preço inválido")
+
     def converte_preco_para_usd(self, produto: Produto) -> bool:
+        self.confere_preco(produto)
         if produto.getMoeda() == "BRL":
             produto.setPreco(produto.getPreco() / self.__USD_BRL)
             produto.setMoeda("USD")

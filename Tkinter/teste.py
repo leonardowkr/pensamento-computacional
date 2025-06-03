@@ -1,12 +1,10 @@
 import tkinter as tk
 
 def imprimirInfos():
-    if toggle == True:
-        rotulo.config(text = "Olá mundo!")
-        toggle = False
-    else: 
-        rotulo.config(text = "Olá Turma!")
-        toggle = True
+        if rotulo['text'] == 'Olá Mundo!':
+            rotulo.config(text = "Olá Turma!")
+        else: 
+            rotulo.config(text = "Olá Mundo!")
 toggle = True
 janela = tk.Tk()
 janela.title("Exemplo Botão")
@@ -16,3 +14,4 @@ rotulo.pack(pady = 10)
 botao = tk.Button (janela, text = "Clique Aqui", command = imprimirInfos)
 botao.pack(pady = 10)
 janela.mainloop()
+ 
