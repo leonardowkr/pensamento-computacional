@@ -1,14 +1,14 @@
-from VeiculosGUI.models.Veiculo import Veiculo
+from models.Veiculo import Veiculo
 
 class Proprietario(Veiculo):
     def __init__(self, cpf, placa):
-        self.__cpf = cpf
-        self.__placa = placa
+        self.__cpf__ = cpf
+        self.__placa__ = placa
         
     def criar_proprietario(self, veiculo: Veiculo, cpf):
         # Lógica para criar um novo proprietário
-        self.__placa = veiculo.get_placa()
-        self.__cpf = cpf
+        self.__placa__ = veiculo.get_placa()
+        self.__cpf__ = cpf
         
     def validar_proprietario(self):
         # Lógica para validar os dados do proprietário
