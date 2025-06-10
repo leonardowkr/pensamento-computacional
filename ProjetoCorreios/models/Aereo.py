@@ -1,13 +1,13 @@
 from LinhaTransporte import LinhaTransporte
 
-class Ferroviario(LinhaTransporte):
+class Aereo(LinhaTransporte):
     """
     Construtor da linha de transporte ferroviária
     """
     def __init__(self, rota: str,  tipo_transporte: str, distancia: float, peso_cubagem: float) -> None:
         super().__init__(rota, tipo_transporte, distancia, peso_cubagem)
-        self.__tarifa_agencia = 4
-        self.__tipo_transporte = "Ferroviário"
+        self.__tarifa_agencia = 3.5
+        self.__tipo_transporte = "Aéreo"
     
     def getTarifa(self) -> float:
         return self.__tarifa_agencia
