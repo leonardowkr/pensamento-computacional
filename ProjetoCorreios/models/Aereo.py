@@ -4,8 +4,8 @@ class Aereo(LinhaTransporte):
     """
     Construtor da linha de transporte ferroviária
     """
-    def __init__(self, rota: str,  tipo_transporte: str, distancia: float, peso_cubagem: float) -> None:
-        super().__init__(rota, tipo_transporte, distancia, peso_cubagem)
+    def __init__(self, origem: str, destino: str,  tipo_transporte: str, distancia: float, peso_cubagem: float) -> None:
+        super().__init__(origem, destino, tipo_transporte, distancia, peso_cubagem)
         self.__tarifa_agencia = 3.5
         self.__tipo_transporte = "Aéreo"
     

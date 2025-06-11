@@ -6,11 +6,11 @@ class Ferroviario(LinhaTransporte):
     """
     def __init__(self, rota: str,  tipo_transporte: str, distancia: float, peso_cubagem: float) -> None:
         super().__init__(rota, tipo_transporte, distancia, peso_cubagem)
-        self.__tarifa_agencia = 4
+        self.__tarifa_por_km = 4
         self.__tipo_transporte = "Ferroviário"
     
     def getTarifa(self) -> float:
-        return self.__tarifa_agencia
+        return self.__tarifa_por_km
     
     def getTipoTransporte(self) -> str:
         return self.__tipo_transporte
