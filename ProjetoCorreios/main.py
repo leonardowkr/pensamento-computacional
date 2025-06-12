@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
-
+import customtkinter as ctk
+from database.DBServices import DBservices
 
 class SistemaCorreios:
     def __init__(self, root):
@@ -10,7 +11,8 @@ class SistemaCorreios:
         self.root.resizable(True, True)
         self.treeview_custos = None
         # Configura o container para as telas
-        self.container = tk.Frame(root)
+        self.container = ctk.CTkFrame(master=root, width=200, height=200)
+
         self.container.grid(row=0, column=0, sticky="e", pady=5)
 
         # Configura o grid do container
@@ -18,7 +20,7 @@ class SistemaCorreios:
         self.container.grid_columnconfigure(0, weight=1)
 
         # Criar as telas
-        self.tela_custos = tk.Frame(self.container)
+        self.tela_custos = ctk.CTkFrame(master=self.container)
 
         # Posiciona as telas no mesmo local
         self.tela_custos.grid(row=0, column=0, sticky="nsew")
@@ -80,6 +82,8 @@ class SistemaCorreios:
         self.treeview_custos.grid(row=5, column=0, columnspan=2, sticky="ew", padx=10, pady=20) # Centered and on row 5
 
 if __name__ == "__main__":
+    db = DBservices()
+    db.criar_usuario("jose", 18)
     root = tk.Tk()
     sistema_correios = SistemaCorreios(root)
     root.mainloop()

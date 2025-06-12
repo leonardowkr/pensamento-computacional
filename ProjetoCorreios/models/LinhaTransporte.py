@@ -29,6 +29,9 @@ class LinhaTransporte:
         info = f"Rota: {self.getRota()}"
         info += f"Distância: {self.getDistancia()} Km"
         info += f"Peso/Cubagem: {self.getPesoCubagem()}"
+        info += f"Origem: {self.getOrigem()}"
+        info += f"Destino: {self.getDestino()}"
+        return info
 
 
     def calcular_custo(self):
