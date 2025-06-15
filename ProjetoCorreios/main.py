@@ -1,5 +1,7 @@
+import tkinter as tk
+from tkinter import ttk
 import customtkinter as ctk
-from tkinter import ttk  # necessário para usar Treeview (não existe equivalente no customtkinter)
+from database.DBServices import DBservices
 
 class SistemaCorreios:
     def __init__(self, root):
@@ -8,6 +10,10 @@ class SistemaCorreios:
         self.root.geometry("1000x800")
         self.root.resizable(True, True)
         self.treeview_custos = None
+        # Configura o container para as telas
+        self.container = ctk.CTkFrame(master=root, width=200, height=200)
+
+        self.container.grid(row=0, column=0, sticky="e", pady=5)
 
         # Configura o container para as telas
         self.container = ctk.CTkFrame(root)
@@ -33,7 +39,10 @@ class SistemaCorreios:
         self.container.grid_rowconfigure(0, weight=1)
         self.container.grid_columnconfigure(0, weight=1)
 
-        self.tela_custos = ctk.CTkFrame(self.container)
+        # Criar as telas
+        self.tela_custos = ctk.CTkFrame(master=self.container)
+
+        # Posiciona as telas no mesmo local
         self.tela_custos.grid(row=0, column=0, sticky="nsew")
 
         self.configurar_tela_custos()
