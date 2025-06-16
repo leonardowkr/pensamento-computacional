@@ -1,23 +1,27 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from database.models import Usuario, Base
+from database.models import LinhaTransporte, Base
 
 class DBservices():
     def __init__(self):
         
         # Conectar ao banco
-        engine = create_engine('sqlite:///exemplo.db')
+        engine = create_engine('sqlite:///teste.db')
         Base.metadata.create_all(engine)    
 
         # Criar uma sessão
         Session = sessionmaker(bind=engine)
         self.session = Session()
 
-    def criar_usuario (self, nome = str, idade= int) -> Usuario:
+    def criar_linha_transporte (self, origem = str, destino = str, 
+                                distancia = float, peso = float, 
+                                tarifa_km = float, tipo_transporte = str) -> LinhaTransporte:
 
         # Criar novo usuário
-        novo_usuario = Usuario(nome=nome, idade=idade)
+        novo_usuario = LinhaTransporte(origem = origem, destino = destino, 
+                                distancia = distancia, peso = peso, 
+                                tarifa_km = tarifa_km, tipo_transporte = tipo_transporte)
 
         # Adicionar à sessão
         self.session.add(novo_usuario)
@@ -26,17 +30,17 @@ class DBservices():
         self.session.commit()
         return novo_usuario
 
-    def buscar_todos_usuarios(self) -> list [Usuario]:
+    def buscar_todas_linhas_transportes(self) -> list [LinhaTransporte]:
         try:
-            usuarios = self.session.query(Usuario).all()
+            usuarios = self.session.query(LinhaTransporte).all()
         except Exception as e:
             print(e)
             usuarios = []
         return usuarios
 
-    def buscar_usuarios_por_nome(self, nome: str) -> list [Usuario]:
+    def buscar_usuarios_por_origem(self, origem: str) -> list [LinhaTransporte]:
         try:
-            usuarios = self.session.query(Usuario).filter_by(nome = nome).all()
+            usuarios = self.session.query(LinhaTransporte).filter_by(origem = origem).all()
         except Exception as e:
             print(e)
             usuarios = []

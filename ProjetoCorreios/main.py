@@ -31,9 +31,9 @@ class SistemaCorreios:
                 fieldbackground="#")
         
         self.rotas = [
-            ("Rota 1", "Rodoviário", "10", "100"),
-            ("Rota 2", "Ferroviário", "20", "200"),
-            ("Rota 3", "Aéreo", "30", "300")
+            ("Rota 1", "Rodoviário", "10", "100", "1000"),
+            ("Rota 2", "Ferroviário", "20", "200", "1000"),
+            ("Rota 3", "Aéreo", "30", "300", "1000")
         ]
 
         self.container.grid_rowconfigure(0, weight=1)
@@ -49,6 +49,19 @@ class SistemaCorreios:
         self.mostrar_tela(self.tela_custos)
         # Estilo personalizado
 
+    def salvar_linha_transporte(self):
+        origem = self.rota_destino_entry.get()
+        destino = self.rota_origem_entry.get()
+        tipo_transporte = self.tipo_transporte_combobox.get()
+        peso = self.peso_entry.get()
+
+         
+
+        db = DBservices()
+        db.criar_linha_transporte(origem="SP", destino="MG", distancia=100,
+                                  peso=10, tarifa_km=5 ,tipo_transporte="Rodviario")
+
+        print(origem, destino, tipo_transporte, peso)
 
     def mostrar_tela(self, tela):
         tela.tkraise()
@@ -64,24 +77,28 @@ class SistemaCorreios:
         form_frame.grid(row=1, column=0, columnspan=2, pady=5)
 
         # Campo Rota
-        ctk.CTkLabel(form_frame, text="Rota (distância):").grid(row=0, column=0, sticky="e", pady=5, padx=5)
-        self.rota_entry = ctk.CTkEntry(form_frame, width=200)
-        self.rota_entry.grid(row=0, column=1, sticky="w", pady=5, padx=5)
+        ctk.CTkLabel(form_frame, text="Rota (Origem):").grid(row=0, column=0, sticky="e", pady=5, padx=5)
+        self.rota_origem_entry = ctk.CTkEntry(form_frame, width=200)
+        self.rota_origem_entry.grid(row=0, column=1, sticky="w", pady=5, padx=5)
+
+        ctk.CTkLabel(form_frame, text="Rota (Destino):").grid(row=1, column=0, sticky="e", pady=5, padx=5)
+        self.rota_destino_entry = ctk.CTkEntry(form_frame, width=200)
+        self.rota_destino_entry.grid(row=1, column=1, sticky="w", pady=5, padx=5)
 
         # Campo Tipo de Transporte
-        ctk.CTkLabel(form_frame, text="Tipo de transporte:").grid(row=1, column=0, sticky="e", pady=5, padx=5)
-        self.tipo_transporte_combobox = ctk.CTkComboBox(form_frame, values=["Rodoviário", "Ferroviário", "Aéreo"])
-        self.tipo_transporte_combobox.grid(row=1, column=1, sticky="w", pady=5, padx=5)
+        ctk.CTkLabel(form_frame, text="Tipo de transporte:").grid(row=2, column=0, sticky="e", pady=5, padx=5)
+        self.tipo_transporte_combobox = ctk.CTkComboBox(form_frame, values=["Rodoviário", "Ferroviário", "Aéreo", "Hidroviário"])
+        self.tipo_transporte_combobox.grid(row=2, column=1, sticky="w", pady=5, padx=5)
 
         # Campo Cubagem
-        ctk.CTkLabel(form_frame, text="Cubagem (L):").grid(row=2, column=0, sticky="e", pady=5, padx=5)
+        ctk.CTkLabel(form_frame, text="Cubagem (L):").grid(row=3, column=0, sticky="e", pady=5, padx=5)
         self.cubagem_entry = ctk.CTkEntry(form_frame, width=200)
-        self.cubagem_entry.grid(row=2, column=1, sticky="w", pady=5, padx=5)
+        self.cubagem_entry.grid(row=3, column=1, sticky="w", pady=5, padx=5)
 
         # Campo Peso
-        ctk.CTkLabel(form_frame, text="Peso (kg):").grid(row=3, column=0, sticky="e", pady=5, padx=5)
+        ctk.CTkLabel(form_frame, text="Peso (kg):").grid(row=4, column=0, sticky="e", pady=5, padx=5)
         self.peso_entry = ctk.CTkEntry(form_frame, width=200)
-        self.peso_entry.grid(row=3, column=1, sticky="w", pady=5, padx=5)
+        self.peso_entry.grid(row=4, column=1, sticky="w", pady=5, padx=5)
 
         
         # Botões
@@ -89,7 +106,7 @@ class SistemaCorreios:
         botoes_frame.grid(row=2, column=0, columnspan=2, pady=20)
 
         ctk.CTkButton(botoes_frame, text="Cancelar", width=100, command=None).grid(row=0, column=0, padx=10)
-        ctk.CTkButton(botoes_frame, text="Salvar", width=100, command=None).grid(row=0, column=1, padx=10)
+        ctk.CTkButton(botoes_frame, text="Salvar", width=100, command=self.salvar_linha_transporte()).grid(row=0, column=1, padx=10)
 
         # Treeview (mantida com ttk pois customtkinter não possui um widget equivalente)
         self.treeview_custos = ttk.Treeview(self.tela_custos, columns=("Rota", "Tipo de Transporte", "Cubagem", "Peso", "Preco"), show='headings')
@@ -103,7 +120,7 @@ class SistemaCorreios:
 
         # Inserir dados iniciais
         for itens in self.rotas:
-            self.treeview_custos.insert("", "end", anchor="center", values=itens)
+            self.treeview_custos.insert("", "end", values=itens)
 
 
 if __name__ == "__main__":
