@@ -54,9 +54,6 @@ class SistemaCorreios:
         destino = self.rota_origem_entry.get()
         tipo_transporte = self.tipo_transporte_combobox.get()
         peso = self.peso_entry.get()
-
-         
-
         db = DBservices()
         db.criar_linha_transporte(origem="SP", destino="MG", distancia=100,
                                   peso=10, tarifa_km=5 ,tipo_transporte="Rodviario")
