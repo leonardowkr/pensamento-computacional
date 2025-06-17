@@ -1,7 +1,13 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 import customtkinter as ctk
 from database.DBServices import DBservices
+from models.LinhaTransporte import LinhaTransporte
+from models.Aereo import Aereo
+from models.Rodoviario import Rodoviario 
+from models.Ferroviario import Ferroviario 
+from models.Hidroviario import Hidroviario
+
 
 class SistemaCorreios:
     def __init__(self, root):
@@ -20,8 +26,6 @@ class SistemaCorreios:
         self.container.grid(row=0, column=0, sticky="nsew", pady=5)
         style = ttk.Style()
         style.theme_use("default")
-        
-        
         
         style.configure("Treeview", 
                 font=('Helvetica', 10),
@@ -49,16 +53,39 @@ class SistemaCorreios:
         self.mostrar_tela(self.tela_custos)
         # Estilo personalizado
 
-    def salvar_linha_transporte(self):
-        origem = self.rota_destino_entry.get()
-        destino = self.rota_origem_entry.get()
-        tipo_transporte = self.tipo_transporte_combobox.get()
+    def salvar_linha_transporte(self): 
+        origem = self.rota_destino_entry.get().title()
+        destino = self.rota_origem_entry.get().title()
+        tipo_transporte = self.tipo_transporte_combobox.get().title()
         peso = self.peso_entry.get()
         db = DBservices()
-        db.criar_linha_transporte(origem="SP", destino="MG", distancia=100,
-                                  peso=10, tarifa_km=5 ,tipo_transporte="Rodviario")
 
-        print(origem, destino, tipo_transporte, peso)
+        if not origem or not destino or not peso:
+            messagebox.showerror("Dados incompletos", "Favor preencher todos os campos!")
+            return
+        else:
+            try:
+                origem = str(origem)
+                destino = str(destino)
+                tipo_transporte = str(tipo_transporte)
+                peso = float(peso)
+            except ValueError:
+                messagebox.showerror("Dados inválidos", "Os campos origem e destino devem ser do tipo float")
+                return
+
+        if tipo_transporte == "Rodoviário":
+            linha_transporte = Rodoviario(origem, destino, distancia=100.0, peso=3.5)
+            linha_transporte.calcular_custo()
+            print(linha_transporte)
+            db.criar_linha_transporte(linha_transporte.getOrigem(), 
+                                      linha_transporte.getDestino(),
+                                      linha_transporte.getDistancia(),
+                                      linha_transporte.getPeso(),
+                                      linha_transporte.getTarifa(),
+                                      linha_transporte.getTipoTransporte(),
+                                      linha_transporte.calcular_custo()
+                                      )
+            messagebox.showinfo("Banco de dados", "Dados salvos com sucesso")
 
     def mostrar_tela(self, tela):
         tela.tkraise()
@@ -103,7 +130,7 @@ class SistemaCorreios:
         botoes_frame.grid(row=2, column=0, columnspan=2, pady=20)
 
         ctk.CTkButton(botoes_frame, text="Cancelar", width=100, command=None).grid(row=0, column=0, padx=10)
-        ctk.CTkButton(botoes_frame, text="Salvar", width=100, command=self.salvar_linha_transporte()).grid(row=0, column=1, padx=10)
+        ctk.CTkButton(botoes_frame, text="Salvar", width=100, command=self.salvar_linha_transporte).grid(row=0, column=1, padx=10)
 
         # Treeview (mantida com ttk pois customtkinter não possui um widget equivalente)
         self.treeview_custos = ttk.Treeview(self.tela_custos, columns=("Rota", "Tipo de Transporte", "Cubagem", "Peso", "Preco"), show='headings')

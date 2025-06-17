@@ -1,13 +1,13 @@
 # Modelo usado como teste
 class LinhaTransporte:
-    def __init__(self, distancia: float, peso_cubagem: float, origem: str, destino: str) -> None: 
+    def __init__(self, origem: str, destino: str, distancia: str, peso = float) -> None: 
         """
         Classe construtora do simulador de custo
         """
         self.__origem = origem
         self.__destino = destino
         self.__distancia = distancia
-        self.__peso_cubagem = peso_cubagem
+        self.__peso = peso
     
     
     def getDistancia(self):
@@ -19,18 +19,17 @@ class LinhaTransporte:
     def getDestino(self):
         return self.__destino
 
-    def getPesoCubagem(self):
-        return self.__peso_cubagem
+    def getPeso(self):
+        return self.__peso
 
     def __str__(self) -> str:
         """
         
         """
-        info = f"Rota: {self.getRota()}"
-        info += f"Distância: {self.getDistancia()} Km"
-        info += f"Peso/Cubagem: {self.getPesoCubagem()}"
-        info += f"Origem: {self.getOrigem()}"
-        info += f"Destino: {self.getDestino()}"
+        info = f"Distância: {self.getDistancia()} Km \n"
+        info += f"Origem: {self.getOrigem()} \n"
+        info += f"Destino: {self.getDestino()} \n"
+        info += f"Peso: {self.getPeso()} Kg"
         return info
 
 

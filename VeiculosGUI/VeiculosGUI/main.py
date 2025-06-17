@@ -350,7 +350,6 @@ class SistemaVeiculos:
             messagebox.showwarning("CPF inválido", "O CPF deve seguir o padrão 000.000.000-00")
             return
         
-        
         # Criar o veículo do tipo específico
         if self.tipo_var == "Carro":
             proprietario = Proprietario(placa, cpf)

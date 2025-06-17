@@ -1,4 +1,4 @@
-from LinhaTransporte import LinhaTransporte
+from .LinhaTransporte import LinhaTransporte
 
 class Aereo(LinhaTransporte):
     """
@@ -17,8 +17,8 @@ class Aereo(LinhaTransporte):
 
     def __str__(self) -> str:
         info = super().__str__()
-        info += f"Tarifa: R${self.getTarifa()}"
-        info += f"Tipo de Transporte: {self.getTipoTransporte()}"
+        info += f"Tarifa: R${self.getTarifa()} \n"
+        info += f"Tipo de Transporte: {self.getTipoTransporte()} \n"
         return info
 
     def calcular_custo(self) -> float:

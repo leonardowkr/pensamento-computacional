@@ -1,11 +1,11 @@
-from LinhaTransporte import LinhaTransporte
+from .LinhaTransporte import LinhaTransporte
 
 class Rodoviario(LinhaTransporte):
-    def __init__(self, origem: str, destino: str, distancia: float, peso_cubagem: float) -> None:
+    def __init__(self, origem: str, destino: str, distancia: float, peso: float) -> None:
         """
         Construtor da classe Rodoviario que herda da classe LinhaTransporte
         """
-        super().__init__(origem, destino, distancia, peso_cubagem)
+        super().__init__(origem, destino, distancia, peso)
         self.__tarifa_por_km = 1.5
         self.__tipo_transporte = "Rodoviário"
 
@@ -21,9 +21,10 @@ class Rodoviario(LinhaTransporte):
 
     def __str__(self):
         info = super().__str__()
-        info += f"Tarifa: {self.getTarifa()}"
-        info += f"Tipo de Transporte: {self.getTipoTransporte()}"
+        info += f"Tarifa: {self.getTarifa()} \n"
+        info += f"Tipo de Transporte: {self.getTipoTransporte()} \n"
+        return info
 
     def calcular_custo(self) -> float:
-        calculo = self.__distancia * self.__tarifa_por_km + self.__peso_cubagem * 2
+        calculo = self.getDistancia() * self.__tarifa_por_km  * 2
         return calculo
