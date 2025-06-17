@@ -4,8 +4,8 @@ class Ferroviario(LinhaTransporte):
     """
     Construtor da linha de transporte ferroviária
     """
-    def __init__(self, rota: str,  tipo_transporte: str, distancia: float, peso_cubagem: float) -> None:
-        super().__init__(rota, tipo_transporte, distancia, peso_cubagem)
+    def __init__(self, origem: str, destino: str, distancia: float, peso: float) -> None:
+        super().__init__(origem, destino, distancia, peso)
         self.__tarifa_por_km = 4
         self.__tipo_transporte = "Ferroviário"
     
@@ -26,5 +26,5 @@ class Ferroviario(LinhaTransporte):
         Método que cálcula o custo do transporte 
         ferroviário com base no peso, na tarfifa da agencia e na distância
         """
-        calculo = self.__peso_cubagem * self.__tarifa_agencia * self.__distancia
+        calculo = self.__tarifa_por_km * self.getDistancia()
         return calculo

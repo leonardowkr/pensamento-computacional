@@ -39,6 +39,7 @@ class LinhaTransporte(Base):
     peso = Column(Float, nullable=False)
     tarifa_km = Column(Float, nullable=False)
     tipo_transporte = Column(String(30), nullable=False)
+    custo = Column(Float, nullable=False)
 
 def __repr__(self):
     return f"<LinhaTransporte(origem='{self.origem}', destino={self.destino}, distancia={self.distancia}, peso={self.peso}, tarifa_km={self.tarifa_km}, tipo_transporte={self.tipo_transporte})>"

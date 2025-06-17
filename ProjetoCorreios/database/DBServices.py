@@ -7,7 +7,7 @@ class DBservices():
     def __init__(self):
         
         # Conectar ao banco
-        engine = create_engine('sqlite:///teste.db')
+        engine = create_engine('sqlite:///teste1.db')
         Base.metadata.create_all(engine)    
 
         # Criar uma sessão
@@ -16,12 +16,12 @@ class DBservices():
 
     def criar_linha_transporte (self, origem = str, destino = str, 
                                 distancia = float, peso = float, 
-                                tarifa_km = float, tipo_transporte = str) -> LinhaTransporte:
+                                tarifa_km = float, tipo_transporte = str, custo = float) -> LinhaTransporte:
 
         # Criar novo usuário
         novo_usuario = LinhaTransporte(origem = origem, destino = destino, 
                                 distancia = distancia, peso = peso, 
-                                tarifa_km = tarifa_km, tipo_transporte = tipo_transporte)
+                                tarifa_km = tarifa_km, tipo_transporte = tipo_transporte, custo = custo)
 
         # Adicionar à sessão
         self.session.add(novo_usuario)

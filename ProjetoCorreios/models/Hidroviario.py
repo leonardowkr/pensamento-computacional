@@ -1,11 +1,11 @@
 from .LinhaTransporte import LinhaTransporte
 
 class Hidroviario(LinhaTransporte):
-    def __init__(self, origem: str, destino: str, distancia: float, peso_cubagem: float) -> None:
+    def __init__(self, origem: str, destino: str, distancia: float, peso: float) -> None:
         """
         Construtor da classe Hidroviario que herda da classe LinhaTransporte
         """
-        super().__init__(origem, destino, distancia, peso_cubagem)
+        super().__init__(origem, destino, distancia, peso)
         self.__tarifa_por_km = 0.9
         self.__tipo_transporte = "Hidroviario"
 
@@ -25,5 +25,5 @@ class Hidroviario(LinhaTransporte):
         info += f"Tipo de Transporte: {self.getTipoTransporte()} \n"
 
     def calcular_custo(self) -> float:
-        calculo = self.__distancia * self.__tarifa_por_km + self.__peso_cubagem * 2
+        calculo = self.getDistancia() * self.__tarifa_por_km + self.getPeso() * 2
         return calculo
