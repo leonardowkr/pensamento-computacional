@@ -38,12 +38,6 @@ class SistemaCorreios:
                 foreground="#000000",
                 background="#f0f0f0",
                 fieldbackground="#")
-        
-        self.rotas = [
-            ("Rota 1", "Rodoviário", "10", "100", "1000"),
-            ("Rota 2", "Ferroviário", "20", "200", "1000"),
-            ("Rota 3", "Aéreo", "30", "300", "1000")
-        ]
 
         self.container.grid_rowconfigure(0, weight=1)
         self.container.grid_columnconfigure(0, weight=1)
@@ -77,20 +71,54 @@ class SistemaCorreios:
             except ValueError:
                 messagebox.showerror("Dados inválidos", "Os campos origem e destino devem ser do tipo float")
                 return
-
         if tipo_transporte == "Rodoviário":
-            linha_transporte = Rodoviario(origem, destino, distancia=100.0, peso=3.5)
-            linha_transporte.calcular_custo()
-            print(linha_transporte)
+            linha_transporte = Rodoviario(origem, destino, distancia=100.0, peso=3)
             db.criar_linha_transporte(linha_transporte.getOrigem(), 
-                                      linha_transporte.getDestino(),
-                                      linha_transporte.getDistancia(),
-                                      linha_transporte.getPeso(),
-                                      linha_transporte.getTarifa(),
-                                      linha_transporte.getTipoTransporte(),
-                                      linha_transporte.calcular_custo()
-                                      )
-            messagebox.showinfo("Banco de dados", "Dados salvos com sucesso")
+                                    linha_transporte.getDestino(),
+                                    linha_transporte.getDistancia(),
+                                    linha_transporte.getPeso(),
+                                    linha_transporte.getTarifa(),
+                                    linha_transporte.getTipoTransporte(),
+                                    linha_transporte.calcular_custo()
+                                )
+        elif tipo_transporte == "Ferroviário":
+            linha_transporte = Ferroviario(origem, destino, distancia=100, peso=3.4)
+            db.criar_linha_transporte(linha_transporte.getOrigem(), 
+                                    linha_transporte.getDestino(),
+                                    linha_transporte.getDistancia(),
+                                    linha_transporte.getPeso(),
+                                    linha_transporte.getTarifa(),
+                                    linha_transporte.getTipoTransporte(),
+                                    linha_transporte.calcular_custo()
+                                )
+
+        elif tipo_transporte == "Hidroviário":
+            linha_transporte = Hidroviario(origem, destino, distancia=100, peso=3.4)
+            db.criar_linha_transporte(linha_transporte.getOrigem(), 
+                                    linha_transporte.getDestino(),
+                                    linha_transporte.getDistancia(),
+                                    linha_transporte.getPeso(),
+                                    linha_transporte.getTarifa(),
+                                    linha_transporte.getTipoTransporte(),
+                                    linha_transporte.calcular_custo()
+                                )
+
+        elif tipo_transporte == "Aéreo":
+            linha_transporte = Aereo(origem, destino, distancia=100, peso=3.4)
+            db.criar_linha_transporte(linha_transporte.getOrigem(), 
+                                    linha_transporte.getDestino(),
+                                    linha_transporte.getDistancia(),
+                                    linha_transporte.getPeso(),
+                                    linha_transporte.getTarifa(),
+                                    linha_transporte.getTipoTransporte(),
+                                    linha_transporte.calcular_custo()
+                                )
+        else:
+            messagebox.showerror("Dados Inválidos", "O Tipo de transporete deve estar disponível na lista")
+            return
+        messagebox.showinfo("Banco de dados", "Dados salvos com sucesso")
+
+        self.atualizar_treeview()
 
     def mostrar_tela(self, tela):
         tela.tkraise()
@@ -129,7 +157,6 @@ class SistemaCorreios:
         self.peso_entry = ctk.CTkEntry(form_frame, width=200)
         self.peso_entry.grid(row=4, column=1, sticky="w", pady=5, padx=5)
 
-        
         # Botões
         botoes_frame = ctk.CTkFrame(self.tela_custos)
         botoes_frame.grid(row=2, column=0, columnspan=2, pady=20)
@@ -138,19 +165,35 @@ class SistemaCorreios:
         ctk.CTkButton(botoes_frame, text="Salvar", width=100, command=self.salvar_linha_transporte).grid(row=0, column=1, padx=10)
 
         # Treeview (mantida com ttk pois customtkinter não possui um widget equivalente)
-        self.treeview_custos = ttk.Treeview(self.tela_custos, columns=("Rota", "Tipo de Transporte", "Cubagem", "Peso", "Preco"), show='headings')
-        self.treeview_custos.heading("Rota", text="Rota (distância)")
+        self.treeview_custos = ttk.Treeview(self.tela_custos, columns=("Origem", "Destino", "Distância",  "Peso", "Tarifa por Km", "Tipo de Transporte", "Custo"), show='headings')
+        self.treeview_custos.heading("Origem", text="Origem")
+        self.treeview_custos.heading("Destino", text="Destino")
+        self.treeview_custos.heading("Distância", text="Distância (Km)")
+        self.treeview_custos.heading("Peso", text="Peso (Kg)")
+        self.treeview_custos.heading("Tarifa por Km", text="Tarifa por Km")
         self.treeview_custos.heading("Tipo de Transporte", text="Tipo de Transporte")
-        self.treeview_custos.heading("Cubagem", text="Cubagem (L)")
-        self.treeview_custos.heading("Peso", text="Peso (kg)")
-        self.treeview_custos.heading("Preco", text="Valor (R$)")
+        self.treeview_custos.heading("Custo", text="Custo")
 
         self.treeview_custos.grid(row=3, column=0, columnspan=2, sticky="ew", padx=20, pady=20)
+        self.atualizar_treeview()
 
+    def atualizar_treeview(self) -> None:
+        # Método utilizado para atualizar a tabela toda vez que um novo cadastro é feito
+        self.limpar_treeview()
+        db = DBservices()
+        linhas_transportes = []
+        # Salva os valores que estão no banco em uma lista 
+        for item in db.buscar_todas_linhas_transportes():
+            linhas_transportes.append((item.origem, item.destino, item.distancia, item.peso, item.tarifa_km, item.tipo_transporte, item.custo ))
         # Inserir dados iniciais
-        for itens in self.rotas:
+        # Percorre a lista e adiciona os dados no treeview
+        for itens in linhas_transportes:
             self.treeview_custos.insert("", "end", values=itens)
-
+    
+    def limpar_treeview(self) -> None:
+        # Método para limpar a treeview antes de atualizar com a nova informação
+        for item in self.treeview_custos.get_children():
+         self.treeview_custos.delete(item)
 
 if __name__ == "__main__":
     ctk.set_appearance_mode("system")  # ou "dark", "light"
