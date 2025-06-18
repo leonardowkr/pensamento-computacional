@@ -7,15 +7,20 @@ from models.Aereo import Aereo
 from models.Rodoviario import Rodoviario 
 from models.Ferroviario import Ferroviario 
 from models.Hidroviario import Hidroviario
-
+from PIL import Image, ImageTk
 
 class SistemaCorreios:
     def __init__(self, root):
+        
         self.root = root
         self.root.title("Sistema Correios")
         self.root.geometry("1000x800")
         self.root.resizable(True, True)
         self.treeview_custos = None
+        self.root.iconbitmap("ProjetoCorreios/utils/favicon.ico")
+        
+        #icon = ImageTk.PhotoImage(file="ProjetoCorreios/utils/favicon.png")
+        #self.root.wm_iconphoto(True, icon)
         # Configura o container para as telas
         self.container = ctk.CTkFrame(master=root, width=200, height=200)
 
@@ -113,7 +118,7 @@ class SistemaCorreios:
         ctk.CTkLabel(form_frame, text="Tipo de transporte:").grid(row=2, column=0, sticky="e", pady=5, padx=5)
         self.tipo_transporte_combobox = ctk.CTkComboBox(form_frame, values=["Rodoviário", "Ferroviário", "Aéreo", "Hidroviário"])
         self.tipo_transporte_combobox.grid(row=2, column=1, sticky="w", pady=5, padx=5)
-
+        self.tipo_transporte_combobox.configure(state = "readonly")  # para tornar o combobox somente leitura
         # Campo Cubagem
         ctk.CTkLabel(form_frame, text="Cubagem (L):").grid(row=3, column=0, sticky="e", pady=5, padx=5)
         self.cubagem_entry = ctk.CTkEntry(form_frame, width=200)
@@ -153,4 +158,6 @@ if __name__ == "__main__":
 
     root = ctk.CTk()
     sistema_correios = SistemaCorreios(root)
+    
     root.mainloop()
+    
