@@ -127,54 +127,52 @@ class SistemaCorreios:
         self.tela_custos.grid_columnconfigure(0, weight=1)
         self.tela_custos.grid_columnconfigure(1, weight=1)
 
-        titulo = ctk.CTkLabel(self.tela_custos, text="SIMULAÇÃO DE CUSTOS", font=ctk.CTkFont(size=20, weight="bold"))
-        titulo.grid(row=0, column=0, columnspan=2, pady=10)
+        titulo = ctk.CTkLabel(self.tela_custos, text="SIMULAÇÃO DE CUSTOS", font=ctk.CTkFont(size=22, weight="bold"))
+        titulo.grid(row=0, column=0, columnspan=2, pady=20)
 
-        form_frame = ctk.CTkFrame(self.tela_custos)
-        form_frame.grid(row=1, column=0, columnspan=2, pady=5)
+        # Frame de formulário
+        form_frame = ctk.CTkFrame(self.tela_custos, fg_color="transparent")
+        form_frame.grid(row=1, column=0, columnspan=2, pady=10, padx=40, sticky="ew")
+        form_frame.grid_columnconfigure((0, 1), weight=1)
 
-        # Campo Rota
-        ctk.CTkLabel(form_frame, text="Rota (Origem):").grid(row=0, column=0, sticky="e", pady=5, padx=5)
-        self.rota_origem_entry = ctk.CTkEntry(form_frame, width=200)
-        self.rota_origem_entry.grid(row=0, column=1, sticky="w", pady=5, padx=5)
+        def criar_linha(row, texto, entry_widget):
+            ctk.CTkLabel(form_frame, text=texto).grid(row=row, column=0, sticky="e", pady=8, padx=10)
+            entry_widget.grid(row=row, column=1, sticky="w", pady=8, padx=10)
 
-        ctk.CTkLabel(form_frame, text="Rota (Destino):").grid(row=1, column=0, sticky="e", pady=5, padx=5)
-        self.rota_destino_entry = ctk.CTkEntry(form_frame, width=200)
-        self.rota_destino_entry.grid(row=1, column=1, sticky="w", pady=5, padx=5)
+        self.rota_origem_entry = ctk.CTkEntry(form_frame, width=250, placeholder_text="Ex: São Paulo")
+        criar_linha(0, "Rota (Origem):", self.rota_origem_entry)
 
-        # Campo Tipo de Transporte
-        ctk.CTkLabel(form_frame, text="Tipo de transporte:").grid(row=2, column=0, sticky="e", pady=5, padx=5)
-        self.tipo_transporte_combobox = ctk.CTkComboBox(form_frame, values=["Rodoviário", "Ferroviário", "Aéreo", "Hidroviário"])
-        self.tipo_transporte_combobox.grid(row=2, column=1, sticky="w", pady=5, padx=5)
-        self.tipo_transporte_combobox.configure(state = "readonly")  # para tornar o combobox somente leitura
-        # Campo Cubagem
-        ctk.CTkLabel(form_frame, text="Cubagem (L):").grid(row=3, column=0, sticky="e", pady=5, padx=5)
-        self.cubagem_entry = ctk.CTkEntry(form_frame, width=200)
-        self.cubagem_entry.grid(row=3, column=1, sticky="w", pady=5, padx=5)
+        self.rota_destino_entry = ctk.CTkEntry(form_frame, width=250, placeholder_text="Ex: Rio de Janeiro")
+        criar_linha(1, "Rota (Destino):", self.rota_destino_entry)
 
-        # Campo Peso
-        ctk.CTkLabel(form_frame, text="Peso (kg):").grid(row=4, column=0, sticky="e", pady=5, padx=5)
-        self.peso_entry = ctk.CTkEntry(form_frame, width=200)
-        self.peso_entry.grid(row=4, column=1, sticky="w", pady=5, padx=5)
+        self.tipo_transporte_combobox = ctk.CTkComboBox(form_frame, values=["Rodoviário", "Ferroviário", "Aéreo", "Hidroviário"], width=250)
+        self.tipo_transporte_combobox.grid(row=2, column=1, sticky="w", pady=8, padx=10)
+        ctk.CTkLabel(form_frame, text="Tipo de transporte:").grid(row=2, column=0, sticky="e", pady=8, padx=10)
+        self.tipo_transporte_combobox.configure(state="readonly")
+
+        self.cubagem_entry = ctk.CTkEntry(form_frame, width=250, placeholder_text="Ex: 80.0")
+        criar_linha(3, "Cubagem (L):", self.cubagem_entry)
+
+        self.peso_entry = ctk.CTkEntry(form_frame, width=250, placeholder_text="Ex: 3.5")
+        criar_linha(4, "Peso (kg):", self.peso_entry)
 
         # Botões
-        botoes_frame = ctk.CTkFrame(self.tela_custos)
-        botoes_frame.grid(row=2, column=0, columnspan=2, pady=20)
+        botoes_frame = ctk.CTkFrame(self.tela_custos, fg_color="transparent")
+        botoes_frame.grid(row=2, column=0, columnspan=2, pady=10)
 
-        ctk.CTkButton(botoes_frame, text="Cancelar", width=100, command=None).grid(row=0, column=0, padx=10)
-        ctk.CTkButton(botoes_frame, text="Salvar", width=100, command=self.salvar_linha_transporte).grid(row=0, column=1, padx=10)
+        ctk.CTkButton(botoes_frame, text="Cancelar", width=120, fg_color="#c0392b", hover_color="#922b21", command=None).grid(row=0, column=0, padx=20)
+        ctk.CTkButton(botoes_frame, text="Salvar", width=120, fg_color="#2980b9", hover_color="#2471a3", command=self.salvar_linha_transporte).grid(row=0, column=1, padx=20)
 
-        # Treeview (mantida com ttk pois customtkinter não possui um widget equivalente)
-        self.treeview_custos = ttk.Treeview(self.tela_custos, columns=("Origem", "Destino", "Distância",  "Peso", "Tarifa por Km", "Tipo de Transporte", "Custo"), show='headings')
-        self.treeview_custos.heading("Origem", text="Origem")
-        self.treeview_custos.heading("Destino", text="Destino")
-        self.treeview_custos.heading("Distância", text="Distância (Km)")
-        self.treeview_custos.heading("Peso", text="Peso (Kg)")
-        self.treeview_custos.heading("Tarifa por Km", text="Tarifa por Km")
-        self.treeview_custos.heading("Tipo de Transporte", text="Tipo de Transporte")
-        self.treeview_custos.heading("Custo", text="Custo")
+        # Tabela de resultados
+        treeview_frame = ctk.CTkFrame(self.tela_custos)
+        treeview_frame.grid(row=3, column=0, columnspan=2, pady=20, padx=40, sticky="nsew")
 
-        self.treeview_custos.grid(row=3, column=0, columnspan=2, sticky="ew", padx=20, pady=20)
+        self.treeview_custos = ttk.Treeview(treeview_frame, columns=("Origem", "Destino", "Distância", "Peso", "Tarifa por Km", "Tipo de Transporte", "Custo"), show='headings')
+        for col in ("Origem", "Destino", "Distância", "Peso", "Tarifa por Km", "Tipo de Transporte", "Custo"):
+            self.treeview_custos.heading(col, text=col)
+            self.treeview_custos.column(col, anchor="center", width=140)
+        self.treeview_custos.pack(fill="both", expand=True)
+        
         self.atualizar_treeview()
 
     def atualizar_treeview(self) -> None:
