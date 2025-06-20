@@ -1,77 +1,73 @@
 import customtkinter as ctk
-import tkinter.ttk as ttk
+from PIL import Image
+import os
 
-# Configurações iniciais
-ctk.set_appearance_mode("dark")
-ctk.set_default_color_theme("blue")
+class TelaCadastro:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Cadastro - Sistema Correios")
+        self.root.geometry("900x500")
+        self.root.resizable(False, False)
 
-app = ctk.CTk()
-app.geometry("1000x600")
-app.title("Sistema Correios")
+        # Frame principal
+        self.container = ctk.CTkFrame(master=self.root)
+        self.container.pack(fill="both", expand=True)
 
-# Topo com logo e campo de busca
-top_frame = ctk.CTkFrame(app, corner_radius=0)
-top_frame.pack(fill="x", pady=(10, 0), padx=10)
+        # Frame direito (imagem)
+        '''
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+        imagem_path = os.path.join(BASE_DIR, "assets", "image.png")
+        imagem = ctk.CTkImage(Image.open(imagem_path), size=(450, 500))
+        imagem_label = ctk.CTkLabel(self.container, text="", image=imagem)
+        imagem_label.place(x=450, y=0)
+        '''
 
-logo = ctk.CTkLabel(top_frame, text="📬 Sistema Correios", font=("Arial", 16, "bold"))
-logo.pack(side="left", padx=10)
+        # Frame esquerdo (formulário)
+        frame_formulario = ctk.CTkFrame(self.container, width=450, height=500, corner_radius=0, fg_color="black")
+        frame_formulario.place(x=0, y=0)
 
-search_entry = ctk.CTkEntry(top_frame, placeholder_text="Pesquisar", width=200)
-search_entry.pack(side="right", padx=10)
+        # Título
+        ctk.CTkLabel(frame_formulario, text="Criar Conta", font=ctk.CTkFont(size=28, weight="bold"), text_color="white").pack(pady=(40, 10))
 
-# Título e formulário
-title = ctk.CTkLabel(app, text="SIMULAÇÃO DE CUSTOS", font=("Arial", 20, "bold"))
-title.pack(pady=10)
+        # Campo nome
+        ctk.CTkLabel(frame_formulario, text="Nome completo", text_color="white").pack(padx=50, anchor="w")
+        self.entry_nome = ctk.CTkEntry(frame_formulario, width=350, height=40, placeholder_text="Digite seu nome", border_color="#FFCC00", border_width=2)
+        self.entry_nome.pack(padx=50, pady=(5, 10))
 
-form_frame = ctk.CTkFrame(app)
-form_frame.pack(pady=10)
+        # Campo e-mail
+        ctk.CTkLabel(frame_formulario, text="Email", text_color="white").pack(padx=50, anchor="w")
+        self.entry_email = ctk.CTkEntry(frame_formulario, width=350, height=40, placeholder_text="Digite seu e-mail", border_color="#FFCC00", border_width=2)
+        self.entry_email.pack(padx=50, pady=(5, 10))
 
-campos = [
-    ("Origem:", "origem"),
-    ("Destino:", "destino"),
-    ("Cubagem (L):", "cubagem"),
-    ("Peso (Kg):", "peso")
-]
-entries = {}
+        # Campo senha
+        ctk.CTkLabel(frame_formulario, text="Senha", text_color="white").pack(padx=50, anchor="w")
+        self.entry_senha = ctk.CTkEntry(frame_formulario, width=350, height=40, show="*", placeholder_text="Crie uma senha", border_color="#FFCC00", border_width=2)
+        self.entry_senha.pack(padx=50, pady=(5, 20))
 
-for idx, (label, key) in enumerate(campos):
-    l = ctk.CTkLabel(form_frame, text=label)
-    l.grid(row=idx, column=0, padx=10, pady=5, sticky="e")
-    e = ctk.CTkEntry(form_frame, width=200)
-    e.grid(row=idx, column=1, padx=10, pady=5, sticky="w")
-    entries[key] = e
+        # Botão cadastrar
+        ctk.CTkButton(
+            frame_formulario,
+            text="Cadastrar",
+            width=350,
+            height=45,
+            font=ctk.CTkFont(size=16, weight="bold"),
+            fg_color="#27ae60",
+            hover_color="#1e8449",
+            command=None
+        ).pack(pady=(10, 20))
 
-# Tipo de transporte
-tipo_label = ctk.CTkLabel(form_frame, text="Tipo de transporte:")
-tipo_label.grid(row=4, column=0, padx=10, pady=5, sticky="e")
-tipo_menu = ctk.CTkOptionMenu(form_frame, values=["Rodoviário", "Ferroviário", "Aéreo", "Hidroviário"])
-tipo_menu.grid(row=4, column=1, padx=10, pady=5, sticky="w")
+        # Voltar
+        voltar_login = ctk.CTkLabel(frame_formulario, text="Já tenho uma conta", font=ctk.CTkFont(size=12, underline=True), text_color="white", cursor="hand2")
+        voltar_login.pack()
+        voltar_login.bind("<Button-1>", lambda e: self.root.destroy())
 
-# Botões
-btn_frame = ctk.CTkFrame(app, fg_color="transparent")
-btn_frame.pack(pady=10)
+        # Rodapé
+        ctk.CTkLabel(frame_formulario, text="2025 | Desenvolvido por Kauê Graff", font=ctk.CTkFont(size=10), text_color="gray").pack(side="bottom", pady=10)
 
-cancel_btn = ctk.CTkButton(btn_frame, text="Cancelar", fg_color="#c0392b", hover_color="#a93226")
-cancel_btn.pack(side="left", padx=10)
+if __name__ == "__main__":
+    ctk.set_appearance_mode("system")
+    ctk.set_default_color_theme("blue")
 
-save_btn = ctk.CTkButton(btn_frame, text="Salvar", fg_color="#2980b9", hover_color="#2471a3")
-save_btn.pack(side="left", padx=10)
-
-# Tabela
-tree_frame = ctk.CTkFrame(app)
-tree_frame.pack(fill="both", expand=True, padx=10, pady=10)
-
-cols = ["Origem", "Destino", "Distancia (Km)", "Peso (kg)", "Tipo de Transporte", "Custo"]
-tree = ttk.Treeview(tree_frame, columns=cols, show="headings")
-
-for col in cols:
-    tree.heading(col, text=col)
-    tree.column(col, anchor="center", width=120)
-
-tree.pack(fill="both", expand=True)
-
-# Dados mock
-for i in range(6):
-    tree.insert("", "end", values=["Teste", "Teste", 100.0, 3.0, "Rodoviário", 300.0])
-
-app.mainloop()
+    root = ctk.CTk()
+    app = TelaCadastro(root)
+    root.mainloop()
