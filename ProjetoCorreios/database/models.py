@@ -20,7 +20,7 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 class LinhaTransporte(Base):
     """
-        Classe que representa a tabela 'usuarios' no banco de dados.
+        Classe que representa a tabela 'linhatransporte' no banco de dados.
         Atributos: 
             id (int): ID da linha de transporte (chave primária)
             origem (str): Dá onde está saindo (tamanho máximo de 50 caractéres)
@@ -43,3 +43,21 @@ class LinhaTransporte(Base):
 
 def __repr__(self):
     return f"<LinhaTransporte(origem='{self.origem}', destino={self.destino}, distancia={self.distancia}, peso={self.peso}, tarifa_km={self.tarifa_km}, tipo_transporte={self.tipo_transporte})>"
+
+class Usuario(Base):
+    """
+    Classe que representa a tabela 'usuarios' no banco de dados.
+    Atributos: 
+        id (int): ID da linha de transporte (chave primária)
+        origem (str): Dá onde está saindo (tamanho máximo de 50 caractéres)
+        destino (str): Para onde vai (tamanho máximo de 50 caractéres)
+        distancia (float): Distancia entre origem e destino
+        peso (float): Peso da mercadoria transportada
+        tarifa por km (float): tarifa cobrada por km rodado
+        tipo transporte (str): tipo de transporte utilizado
+    """
+    __tablename__ = 'usuario'
+    id = Column(Integer, primary_key=True)
+    nome = Column(String(50), nullable=False)
+    email = Column(String(50), nullable=False)
+    senha = Column(String(50), nullable=False)

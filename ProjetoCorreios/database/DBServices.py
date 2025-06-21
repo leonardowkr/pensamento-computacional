@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from database.models import LinhaTransporte, Base
+from database.models import LinhaTransporte, Usuario, Base
 
 class DBservices():
     def __init__(self):
@@ -38,9 +38,29 @@ class DBservices():
             usuarios = []
         return usuarios
 
-    def buscar_usuarios_por_origem(self, origem: str) -> list [LinhaTransporte]:
+    #def buscar_usuarios_por_origem(self, origem: str) -> list [LinhaTransporte]:
+    #    try:
+    #        usuarios = self.session.query(LinhaTransporte).filter_by(origem = origem).all()
+    #    except Exception as e:
+    #        print(e)
+    #        usuarios = []
+    #    return usuarios
+    
+    def criar_usuario(self, nome = str, email = str, senha = str) -> Usuario:
+
+        # Criar novo usuário
+        novo_usuario = Usuario(nome = nome, email = email, senha = senha)
+
+        # Adicionar à sessão
+        self.session.add(novo_usuario)
+
+        # Salvar no banco
+        self.session.commit()
+        return novo_usuario
+    
+    def buscar_todos_usuarios(self) -> list [Usuario]:
         try:
-            usuarios = self.session.query(LinhaTransporte).filter_by(origem = origem).all()
+            usuarios = self.session.query(Usuario).all()
         except Exception as e:
             print(e)
             usuarios = []

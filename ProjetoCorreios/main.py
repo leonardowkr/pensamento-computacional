@@ -9,6 +9,7 @@ from models.Ferroviario import Ferroviario
 from models.Hidroviario import Hidroviario
 import os
 from PIL import Image, ImageTk
+import re
 
 class SistemaCorreios:
     def __init__(self, root, modo="login"):
@@ -177,7 +178,27 @@ class SistemaCorreios:
 
     
     def fazer_login(self):
-        self.configurar_tela_custos()
+        email = self.entry_email.get()
+        senha = self.entry_senha.get()
+
+        if not email or not senha:
+            messagebox.showwarning("Login", "Preencha todo os campos para fazer login!")
+            return
+        
+        db = DBservices()
+        usuarios = db.buscar_todos_usuarios()
+        try:
+            for usuario in usuarios:
+                if usuario.email == email and usuario.senha == senha:
+                    self.root_login.destroy()  # Fecha janela atual
+                    root = ctk.CTk()
+                    sistema = SistemaCorreios(root, modo="custos")
+                    root.mainloop()
+                else: 
+                    messagebox.showwarning("Login", "Usuário ou senha incorretos, tente novamente!")
+        except ValueError as erro:
+            messagebox.showerror("Login", "Não foi possível fazer login!")
+            print(erro)
 
     def configurar_tela_cadastro(self):
         # Cria o frame da tela de cadastro
@@ -205,7 +226,7 @@ class SistemaCorreios:
         self.cadastro_senha = ctk.CTkEntry(frame_left_cadastro, width=350, height=40, show="*", placeholder_text="Crie uma senha", border_color="#FFCC00", border_width=2)
         self.cadastro_senha.pack(padx=50, pady=(5, 20))
 
-        ctk.CTkButton(frame_left_cadastro, text="Cadastrar", width=350, height=45, fg_color="#6A0DAD", hover_color="#5a009e", command=None).pack(pady=(10, 10))
+        ctk.CTkButton(frame_left_cadastro, text="Cadastrar", width=350, height=45, fg_color="#6A0DAD", hover_color="#5a009e", command=lambda: self.cadastrar_usuario()).pack(pady=(10, 10))
 
         # Voltar para tela de login - changed text and color to match login
         ctk.CTkButton(frame_left_cadastro, text="Já tenho uma conta", font=ctk.CTkFont(size=12, underline=True), text_color="white", fg_color="black", command=lambda: self.mostrar_tela(self.tela_login)
@@ -219,8 +240,28 @@ class SistemaCorreios:
             ctk.CTkLabel(self.tela_cadastro, text="", image=self.imagem_fundo).pack(side="right", fill="both", expand=True)
         
     
-    def salvar_usuario(self):
+    def cadastrar_usuario(self):
+        nome = self.cadastro_nome.get().title().strip()
+        email = self.cadastro_email.get().strip().lower()
+        senha = self.cadastro_senha.get()
+
+        if not nome or not email or not senha:
+            messagebox.showwarning("Cadastro", "Por favor preencha todos os campos para realizar o cadastro!")
+            return
+        
+        padrao = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+        if not re.fullmatch(padrao, email):
+            print(re.fullmatch(padrao, email))
+            messagebox.showwarning("Cadastro", "E-mail digitado inválido, siga o padrão: email@empresa.com.br")
+            return
+        
+        db = DBservices()
+        db.criar_usuario(nome, email, senha)
+
+        messagebox.showinfo("Cadastro", "Usuário cadastrado com sucesso!")
+
         print("Usuário criado!")
+
 
     def configurar_tela_custos(self):
         self.tela_custos.grid_columnconfigure(0, weight=1)
