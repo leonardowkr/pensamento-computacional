@@ -1,8 +1,11 @@
 # Modelo usado como teste
+from geopy.geocoders import Nominatim
+from geopy.distance import geodesic
+
 class LinhaTransporte:
     def __init__(self, origem: str, destino: str, distancia: str, peso = float) -> None: 
         """
-        Classe construtora do simulador de custo
+        Método construtor da classe linha de transporte
         """
         self.__origem = origem
         self.__destino = destino

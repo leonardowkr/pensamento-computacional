@@ -7,6 +7,7 @@ from models.Aereo import Aereo
 from models.Rodoviario import Rodoviario 
 from models.Ferroviario import Ferroviario 
 from models.Hidroviario import Hidroviario
+from utils.calcular_distancia import calcular_distancia
 import os
 from PIL import Image, ImageTk
 import re
@@ -72,15 +73,21 @@ class SistemaCorreios:
                 messagebox.showerror("Dados inválidos", "Os campos origem e destino devem ser um texto e peso deve ser um número")
                 return
             
+        try:
+            distancia = calcular_distancia(origem, destino)
+        except:
+            messagebox.showwarning("Distância", "Não foi possível calcular a distância, tente novamente")
+            return
+
         if tipo_transporte == "Rodoviário":
-            linha_transporte = Rodoviario(origem, destino, distancia=100.0, peso=3)
+            linha_transporte = Rodoviario(origem, destino, distancia, peso)
             db.criar_linha_transporte(linha_transporte.getOrigem(), 
                                     linha_transporte.getDestino(),
-                                    linha_transporte.getDistancia(),
+                                    round(linha_transporte.getDistancia(), 2),
                                     linha_transporte.getPeso(),
                                     linha_transporte.getTarifa(),
                                     linha_transporte.getTipoTransporte(),
-                                    linha_transporte.calcular_custo()
+                                    round(linha_transporte.calcular_custo() ,2)
                                 )
         elif tipo_transporte == "Ferroviário":
             linha_transporte = Ferroviario(origem, destino, distancia=100, peso=3.4)

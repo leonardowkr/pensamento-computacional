@@ -26,5 +26,5 @@ class Rodoviario(LinhaTransporte):
         return info
 
     def calcular_custo(self) -> float:
-        calculo = self.getDistancia() * self.__tarifa_por_km  * 2
-        return calculo
+        calculo = self.getDistancia() * self.__tarifa_por_km  
+        return round(calculo, 2)
