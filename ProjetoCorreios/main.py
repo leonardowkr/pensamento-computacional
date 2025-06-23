@@ -21,7 +21,6 @@ class SistemaCorreios:
             self.root_login.geometry("900x500")
             self.root_login.resizable(False, False)
             self.root_login.iconbitmap("ProjetoCorreios/utils/favicon.ico")
-
         
             self.container_login = ctk.CTkFrame(master=self.root_login)
             self.container_login.pack(fill="both", expand=True)
@@ -29,7 +28,6 @@ class SistemaCorreios:
             self.tela_login.grid(row=0, column=0, sticky="nsew")
             self.tela_login.grid_rowconfigure(0, weight=1)
             self.tela_login.grid_columnconfigure((0, 1), weight=1)
-            
 
             self.configurar_tela_login()
             self.mostrar_tela(self.tela_login)  
@@ -48,8 +46,7 @@ class SistemaCorreios:
             self.tela_custos = ctk.CTkFrame(master=self.container)
             self.tela_custos.grid(row=0, column=0, sticky="nsew")
             self.configurar_tela_custos()
-            self.mostrar_tela(self.tela_custos)
-        
+            self.mostrar_tela(self.tela_custos)    
 
     def salvar_linha_transporte(self) -> None: 
         origem = self.rota_destino_entry.get().title()
@@ -195,13 +192,14 @@ class SistemaCorreios:
         try:
             for usuario in usuarios:
                 if usuario.email == email and usuario.senha == senha:
-                    self.root_login.destroy()  # Fecha janela atual
+                    self.root_login.destroy()
                     root = ctk.CTk()
                     sistema = SistemaCorreios(root, modo="custos")
                     root.mainloop()
-                else: 
-                    messagebox.showwarning("Login", "Usuário ou senha incorretos, tente novamente!")
                     return
+            else: 
+                messagebox.showwarning("Login", "Usuário ou senha incorretos, tente novamente!")
+
         except ValueError as erro:
             messagebox.showerror("Login", "Não foi possível fazer login!")
             print(erro)
