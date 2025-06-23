@@ -1,7 +1,3 @@
-# Modelo usado como teste
-from geopy.geocoders import Nominatim
-from geopy.distance import geodesic
-
 class LinhaTransporte:
     def __init__(self, origem: str, destino: str, distancia: str, peso = float) -> None: 
         """
@@ -26,15 +22,11 @@ class LinhaTransporte:
         return self.__peso
 
     def __str__(self) -> str:
-        """
-        
-        """
         info = f"Distância: {self.getDistancia()} Km \n"
         info += f"Origem: {self.getOrigem()} \n"
         info += f"Destino: {self.getDestino()} \n"
         info += f"Peso: {self.getPeso()} Kg"
         return info
-
 
     def calcular_custo(self):
         pass

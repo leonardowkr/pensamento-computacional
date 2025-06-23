@@ -26,5 +26,5 @@ class Aereo(LinhaTransporte):
         Método que cálcula o custo do transporte 
         ferroviário com base no peso, na tarfifa da agencia e na distância
         """
-        calculo = self.__tarifa_por_km * self.getDistancia()
+        calculo = self.__tarifa_por_km * self.getDistancia() + self.getPeso() * 2
         return calculo

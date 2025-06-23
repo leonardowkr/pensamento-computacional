@@ -15,10 +15,6 @@ class Rodoviario(LinhaTransporte):
     def getTipoTransporte(self) -> str:
         return self.__tipo_transporte
     
-    def setTarifa(self, nova_tarifa):
-        self.__tarifa_por_km = nova_tarifa
-        return self.__tarifa_por_km
-
     def __str__(self):
         info = super().__str__()
         info += f"Tarifa: {self.getTarifa()} \n"

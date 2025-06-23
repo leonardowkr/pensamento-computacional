@@ -1,6 +1,8 @@
-import tkinter as tk
-from tkinter import ttk, messagebox
+import os
+import re
+from PIL import Image
 import customtkinter as ctk
+from tkinter import ttk, messagebox
 from database.DBServices import DBservices
 from models.LinhaTransporte import LinhaTransporte
 from models.Aereo import Aereo
@@ -8,14 +10,11 @@ from models.Rodoviario import Rodoviario
 from models.Ferroviario import Ferroviario 
 from models.Hidroviario import Hidroviario
 from utils.calcular_distancia import calcular_distancia
-import os
-from PIL import Image, ImageTk
-import re
 
 class SistemaCorreios:
     def __init__(self, root, modo="login"):
         self.modo = modo
-
+        # Verifica qual tela está sendo chamada 
         if modo == "login":
             self.root_login = root
             self.root_login.title("Login - LogiCost")
@@ -23,7 +22,7 @@ class SistemaCorreios:
             self.root_login.resizable(False, False)
             self.root_login.iconbitmap("ProjetoCorreios/utils/favicon.ico")
 
-
+        
             self.container_login = ctk.CTkFrame(master=self.root_login)
             self.container_login.pack(fill="both", expand=True)
             self.tela_login = ctk.CTkFrame(master=self.container_login)
@@ -33,12 +32,11 @@ class SistemaCorreios:
             
 
             self.configurar_tela_login()
-            self.mostrar_tela(self.tela_login)
-            
+            self.mostrar_tela(self.tela_login)  
 
         elif modo == "custos":
             self.root = root
-            self.root.title("Sistema Correios")
+            self.root.title("Simulação de Custo - LogiCost")
             self.root.geometry("1000x800")
             self.root.resizable(True, True)
             self.root.iconbitmap("ProjetoCorreios/utils/favicon.ico")
@@ -53,18 +51,19 @@ class SistemaCorreios:
             self.mostrar_tela(self.tela_custos)
         
 
-    def salvar_linha_transporte(self): 
+    def salvar_linha_transporte(self) -> None: 
         origem = self.rota_destino_entry.get().title()
         destino = self.rota_origem_entry.get().title()
         tipo_transporte = self.tipo_transporte_combobox.get().title()
         peso = self.peso_entry.get()
         db = DBservices()
-
+        # Verifica se os campos não estão em branco
         if not origem or not destino or not peso:
             messagebox.showerror("Dados incompletos", "Favor preencher todos os campos!")
             return
         else:
             try:
+                # Valida se os tipos de dados estão corretos
                 origem = str(origem)
                 destino = str(destino)
                 tipo_transporte = str(tipo_transporte)
@@ -72,13 +71,14 @@ class SistemaCorreios:
             except ValueError:
                 messagebox.showerror("Dados inválidos", "Os campos origem e destino devem ser um texto e peso deve ser um número")
                 return
-            
+        # Tenta fazer o calculo da distancaia, caso de erro em algum parametro exibe uma mensagem na tela
         try:
             distancia = calcular_distancia(origem, destino)
         except:
-            messagebox.showwarning("Distância", "Não foi possível calcular a distância, tente novamente")
+            messagebox.showwarning("Distância", "Não foi possível calcular a distância, tente novamente! Revise origem e destino.")
             return
-
+        
+        # Salva as informações banco de acordo com cada tipo de transporte
         if tipo_transporte == "Rodoviário":
             linha_transporte = Rodoviario(origem, destino, distancia, peso)
             db.criar_linha_transporte(linha_transporte.getOrigem(), 
@@ -90,48 +90,48 @@ class SistemaCorreios:
                                     round(linha_transporte.calcular_custo() ,2)
                                 )
         elif tipo_transporte == "Ferroviário":
-            linha_transporte = Ferroviario(origem, destino, distancia=100, peso=3.4)
+            linha_transporte = Ferroviario(origem, destino, distancia, peso)
             db.criar_linha_transporte(linha_transporte.getOrigem(), 
                                     linha_transporte.getDestino(),
-                                    linha_transporte.getDistancia(),
+                                    round(linha_transporte.getDistancia(), 2),
                                     linha_transporte.getPeso(),
                                     linha_transporte.getTarifa(),
                                     linha_transporte.getTipoTransporte(),
-                                    linha_transporte.calcular_custo()
+                                    round(linha_transporte.calcular_custo(), 2)
                                 )
 
         elif tipo_transporte == "Hidroviário":
-            linha_transporte = Hidroviario(origem, destino, distancia=100, peso=3.4)
+            linha_transporte = Hidroviario(origem, destino, distancia, peso)
             db.criar_linha_transporte(linha_transporte.getOrigem(), 
                                     linha_transporte.getDestino(),
-                                    linha_transporte.getDistancia(),
+                                    round(linha_transporte.getDistancia(), 2),
                                     linha_transporte.getPeso(),
                                     linha_transporte.getTarifa(),
                                     linha_transporte.getTipoTransporte(),
-                                    linha_transporte.calcular_custo()
+                                    round(linha_transporte.calcular_custo(), 2)
                                 )
 
         elif tipo_transporte == "Aéreo":
-            linha_transporte = Aereo(origem, destino, distancia=100, peso=3.4)
+            linha_transporte = Aereo(origem, destino, distancia, peso)
             db.criar_linha_transporte(linha_transporte.getOrigem(), 
                                     linha_transporte.getDestino(),
-                                    linha_transporte.getDistancia(),
+                                    round(linha_transporte.getDistancia(), 2),
                                     linha_transporte.getPeso(),
                                     linha_transporte.getTarifa(),
                                     linha_transporte.getTipoTransporte(),
-                                    linha_transporte.calcular_custo()
+                                    round(linha_transporte.calcular_custo(), 2)
                                 )
         else:
             messagebox.showerror("Dados Inválidos", "O Tipo de transporete deve estar disponível na lista")
             return
         messagebox.showinfo("Banco de dados", "Dados salvos com sucesso")
-
         self.atualizar_treeview()
 
     def mostrar_tela(self, tela):
         tela.tkraise()
     
     def configurar_tela_login(self):
+        # Carrega a imagem da tela de login
         BASE_DIR = os.path.dirname(os.path.abspath(__file__))
         caminho_imagem = os.path.join(BASE_DIR, "assets", "image.png")
         self.imagem_fundo = ctk.CTkImage(Image.open(caminho_imagem), size=(450, 500))
@@ -154,7 +154,6 @@ class SistemaCorreios:
         self.entry_senha = ctk.CTkEntry(login_frame, width=350, height=40, show="*", placeholder_text="Digite sua senha", border_color="#FFCC00", border_width=2)
         self.entry_senha.pack(padx=50, pady=(5, 10))
 
-        ctk.CTkLabel(login_frame, text="Esqueci minha senha", font=ctk.CTkFont(underline=True, size=12), text_color="white", cursor="hand2").pack(padx=50, anchor="w")
 
         self.botao_login = ctk.CTkButton(
             login_frame,
@@ -182,16 +181,15 @@ class SistemaCorreios:
         # Frame direito (imagem)
         imagem_label = ctk.CTkLabel(self.tela_login, text="", image=self.imagem_fundo)
         imagem_label.grid(row=0, column=1, sticky="nsew")
-
     
     def fazer_login(self):
         email = self.entry_email.get()
         senha = self.entry_senha.get()
-
+        # Verifica se os campos do login não estão vazios 
         if not email or not senha:
             messagebox.showwarning("Login", "Preencha todo os campos para fazer login!")
             return
-        
+        # Busca os usuários do banco
         db = DBservices()
         usuarios = db.buscar_todos_usuarios()
         try:
@@ -203,6 +201,7 @@ class SistemaCorreios:
                     root.mainloop()
                 else: 
                     messagebox.showwarning("Login", "Usuário ou senha incorretos, tente novamente!")
+                    return
         except ValueError as erro:
             messagebox.showerror("Login", "Não foi possível fazer login!")
             print(erro)
@@ -215,7 +214,6 @@ class SistemaCorreios:
         self.tela_cadastro.grid_rowconfigure(0, weight=1)
         self.tela_cadastro.grid_columnconfigure(0, weight=1)
 
-        # Left side (registration form) - similar to login's left side
         frame_left_cadastro = ctk.CTkFrame(self.tela_cadastro, width=450, height=550, corner_radius=0, fg_color="black")
         frame_left_cadastro.pack(side="left", fill="y")
 
@@ -235,7 +233,6 @@ class SistemaCorreios:
 
         ctk.CTkButton(frame_left_cadastro, text="Cadastrar", width=350, height=45, fg_color="#6A0DAD", hover_color="#5a009e", command=lambda: self.cadastrar_usuario()).pack(pady=(10, 10))
 
-        # Voltar para tela de login - changed text and color to match login
         ctk.CTkButton(frame_left_cadastro, text="Já tenho uma conta", font=ctk.CTkFont(size=12, underline=True), text_color="white", fg_color="black", command=lambda: self.mostrar_tela(self.tela_login)
         ).pack(pady=(10, 10))
 
@@ -252,16 +249,19 @@ class SistemaCorreios:
         email = self.cadastro_email.get().strip().lower()
         senha = self.cadastro_senha.get()
 
+        # Verifica se os campos não estão vazios
         if not nome or not email or not senha:
             messagebox.showwarning("Cadastro", "Por favor preencha todos os campos para realizar o cadastro!")
             return
         
         padrao = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+        # Verifica o email está dentro do padrão
         if not re.fullmatch(padrao, email):
             print(re.fullmatch(padrao, email))
             messagebox.showwarning("Cadastro", "E-mail digitado inválido, siga o padrão: email@empresa.com.br")
             return
         
+        # Cria o usuário
         db = DBservices()
         db.criar_usuario(nome, email, senha)
 
@@ -302,25 +302,28 @@ class SistemaCorreios:
 
         self.peso_entry = ctk.CTkEntry(form_frame, width=250, placeholder_text="Ex: 3.5")
         criar_linha(4, "Peso (kg):", self.peso_entry)
-
+        
         # Botões
         botoes_frame = ctk.CTkFrame(self.tela_custos, fg_color="transparent")
         botoes_frame.grid(row=2, column=0, columnspan=2, pady=10)
 
-        ctk.CTkButton(botoes_frame, text="Cancelar", width=120, fg_color="#c0392b", hover_color="#922b21", command=None).grid(row=0, column=0, padx=20)
+        ctk.CTkButton(botoes_frame, text="Sair", width=120, fg_color="#c0392b", hover_color="#922b21", command=self.sair_tela_custo).grid(row=0, column=0, padx=20)
         ctk.CTkButton(botoes_frame, text="Salvar", width=120, fg_color="#2980b9", hover_color="#2471a3", command=self.salvar_linha_transporte).grid(row=0, column=1, padx=20)
 
         # Tabela de resultados
         treeview_frame = ctk.CTkFrame(self.tela_custos)
         treeview_frame.grid(row=3, column=0, columnspan=2, pady=20, padx=40, sticky="nsew")
 
-        self.treeview_custos = ttk.Treeview(treeview_frame, columns=("Origem", "Destino", "Distância", "Peso", "Tarifa por Km", "Tipo de Transporte", "Custo"), show='headings')
-        for col in ("Origem", "Destino", "Distância", "Peso", "Tarifa por Km", "Tipo de Transporte", "Custo"):
+        self.treeview_custos = ttk.Treeview(treeview_frame, columns=("Origem", "Destino", "Distância (Km)", "Peso (Kg)", "Tarifa por Km - R$", "Tipo de Transporte", "Custo - R$"), show='headings')
+        for col in ("Origem", "Destino", "Distância (Km)", "Peso (Kg)", "Tarifa por Km - R$", "Tipo de Transporte", "Custo - R$"):
             self.treeview_custos.heading(col, text=col)
             self.treeview_custos.column(col, anchor="center", width=140)
         self.treeview_custos.pack(fill="both", expand=True)
         
         self.atualizar_treeview()
+    
+    def sair_tela_custo(self):
+        self.root.destroy()
 
     def atualizar_treeview(self) -> None:
         # Método utilizado para atualizar a tabela toda vez que um novo cadastro é feito

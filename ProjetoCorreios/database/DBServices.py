@@ -7,7 +7,7 @@ class DBservices():
     def __init__(self):
         
         # Conectar ao banco
-        engine = create_engine('sqlite:///teste1.db')
+        engine = create_engine('sqlite:///simulacaocusto.db')
         Base.metadata.create_all(engine)    
 
         # Criar uma sessão
